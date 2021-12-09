@@ -12,11 +12,12 @@ router.route("/");
 router
   .route("/products")
   .get(isAuthenticatedUser, authorisedRoles("admin"), getAllProducts);
-router.route("/products/new").post(isAuthenticatedUser, createProduct);
+router.route("/admin/products/new").post(isAuthenticatedUser,authorisedRoles("admin"), createProduct);
 router
-  .route("/products/:id")
-  .put(isAuthenticatedUser, updateProduct)
-  .delete(isAuthenticatedUser, deleteProduct)
-  .get(getProductDetails);
+  .route("/admin/products/:id")
+  .put(isAuthenticatedUser,authorisedRoles("admin"), updateProduct)
+  .delete(isAuthenticatedUser,authorisedRoles("admin"), deleteProduct)
+  
+  router.route("/product/:id").get(getProductDetails);
 
 module.exports = router;
