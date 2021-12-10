@@ -8,7 +8,7 @@ const productSchema = new Schema({
     required: [true, "Enter description of your product"],
   },
   price: { type: Number, required: [true, "Enter the price"] },
-  rating: { type: Number, default: 0 },
+  ratings: { type: Number, default: 0 },
   images: [
     {
       public_id: { type: String, required: true },
@@ -28,12 +28,18 @@ const productSchema = new Schema({
   },
   reviews: [
     {
+      user: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+        required: true,
+      },
       name: { type: String, required: true },
       rating: { type: Number, required: true },
       comment: { type: String, required: true },
       createdAt: { type: Date, default: Date.now },
     },
   ],
+  numOfReviews: { type: Number, default: 0 },
 });
 const Product = mongoose.model("Product", productSchema);
 module.exports = Product;

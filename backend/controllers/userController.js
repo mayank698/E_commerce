@@ -127,13 +127,16 @@ exports.getUserDetail = catchAsyncError(async (req, res, next) => {
 //update password
 exports.updatePassword = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
-  const isPasswordMatched = user.comparePassword(req.body.oldPassword);
+  const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
+
   if (!isPasswordMatched) {
     return next(new ErrorHandler("Old password is incorrect", 401));
   }
+
   if (req.body.newPassword !== req.body.confirmPassword) {
     return next(new ErrorHandler("Password doesn't match", 401));
   }
+
   user.password = req.body.newPassword;
   await user.save();
   sendToken(user, 200, res);
@@ -165,6 +168,7 @@ exports.deleteUser = catchAsyncError(async (req, res, next) => {
   await user.remove();
   res.status(200).json({
     success: true,
+    message: "User deleted successfully",
   });
 });
 
@@ -175,7 +179,7 @@ exports.updateRole = catchAsyncError(async (req, res, next) => {
     email: req.body.email,
     role: req.body.role,
   };
-  const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+  await User.findByIdAndUpdate(req.params.id, newUserData, {
     new: true,
     runValidators: true,
     useFindAndModify: false,
@@ -207,3 +211,4 @@ exports.getSingleUser = catchAsyncError(async (req, res, next) => {
     user,
   });
 });
+
