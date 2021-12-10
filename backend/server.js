@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/product", require("./routes/productRoutes"));
 app.use("/user", require("./routes/userRoutes"));
+app.use("/order", require("./routes/orderRoutes"));
 
 //Handling uncaught exception
 process.on("uncaughtException", (err) => {
