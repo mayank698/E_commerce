@@ -1,0 +1,65 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Arima+Madurai:wght@500&display=swap");
+
+* {
+  padding: 0px;
+  margin: 0px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  padding: 0px 10px;
+  margin: 5px;
+  font-size: 30px;
+  font-family: "Roboto", sans-serif;
+  color: rgb(18, 97, 51);
+}
+
+.logo span {
+  font-family: "Arima Madurai", cursive;
+}
+
+.search {
+  padding: 10px 10px;
+  border-radius: 10px;
+  margin-left: 162px;
+  margin-right: -70px;
+  width: 40%;
+}
+
+#searchIcon {
+  margin-right: 270px;
+}
+
+#searchIcon:hover {
+  cursor: pointer;
+  color: grey;
+  transition: 0.5s;
+}
+
+ul {
+  display: flex;
+}
+
+li {
+  text-decoration: none;
+  list-style: none;
+  padding: 10px 10px;
+  font-family: "Roboto", sans-serif;
+}
+
+li:hover {
+  cursor: pointer;
+  color: rgb(148, 122, 88);
+  transition: 0.5s;
+  text-shadow: rgba(0, 0, 0, 0.8);
+ }
+
+.link{
+    text-decoration: none;
+}
