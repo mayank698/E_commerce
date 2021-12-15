@@ -9,9 +9,9 @@ const errorMiddleware = require("./middleware/error");
 const port = 5000;
 app.use(express.json());
 app.use(cookieParser());
-app.use("/product", require("./routes/productRoutes"));
-app.use("/user", require("./routes/userRoutes"));
-app.use("/order", require("./routes/orderRoutes"));
+app.use("/api/v1", require("./routes/productRoutes"));
+app.use("/api/v1", require("./routes/userRoutes"));
+app.use("/api/v1", require("./routes/orderRoutes"));
 
 //Handling uncaught exception
 process.on("uncaughtException", (err) => {
