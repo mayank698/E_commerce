@@ -211,4 +211,3 @@ exports.getSingleUser = catchAsyncError(async (req, res, next) => {
     user,
   });
 });
-
