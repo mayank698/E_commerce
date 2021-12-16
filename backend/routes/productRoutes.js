@@ -11,6 +11,7 @@ const {
 } = require("../controllers/productController");
 const { isAuthenticatedUser, authorisedRoles } = require("../middleware/auth");
 const router = express.Router();
+
 router.route("/");
 router.route("/products").get(getAllProducts);
 router

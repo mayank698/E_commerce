@@ -23,7 +23,7 @@ exports.getAllProducts = catchAsyncError(async (req, res, next) => {
     .filter()
     .pagination(resultPerPage);
   const products = await apifeature.query;
-  res.status(200).json({ success: true, products, productCount });
+  res.status(200).json({ success: true, products, productCount, resultPerPage });
 });
 
 //udpdate product - Admin
