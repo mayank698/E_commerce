@@ -8,6 +8,7 @@ import "./ProductDetails.css";
 import ReviewCard from "./ReviewCard.js";
 import Loader from "../layout/Loader/Loader";
 import { useAlert } from "react-alert";
+import MetaData from "../layout/MetaData";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ const ProductDetails = () => {
         <Loader />
       ) : (
         <Fragment>
+          <MetaData title={`${product.name}---Ecommerce`} />
           <div className="ProductDetails">
             <div>
               <Carousel>
