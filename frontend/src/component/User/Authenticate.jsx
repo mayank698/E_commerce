@@ -1,5 +1,5 @@
 import React, { Fragment, useRef, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "../layout/Loader/Loader";
 import "./Authenticate.css";
 import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
@@ -8,8 +8,10 @@ import FaceIcon from "@mui/icons-material/Face";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, login, register } from "../../actions/userAction";
 import { useAlert } from "react-alert";
+import "../images/Profile.png";
 
 const Authenticate = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const alert = useAlert();
   const { error, loading, isAuthenticated } = useSelector(
@@ -64,9 +66,12 @@ const Authenticate = () => {
   useEffect(() => {
     if (error) {
       alert.error(error);
-      dispatch(clearErrors);
+      dispatch(clearErrors());
     }
-  }, [dispatch, error, alert, isAuthenticated]);
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [dispatch, error, alert, isAuthenticated, navigate]);
 
   const switchTabs = (e, tab) => {
     if (tab === "login") {

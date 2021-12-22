@@ -5,7 +5,7 @@ import { clearErrors, getProductDetails } from "../../actions/productAction";
 import { useParams } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
 import "./ProductDetails.css";
-import ReviewCard from "./ReviewCard.js";
+import ReviewCard from "./ReviewCard";
 import Loader from "../layout/Loader/Loader";
 import { useAlert } from "react-alert";
 import MetaData from "../layout/MetaData";
