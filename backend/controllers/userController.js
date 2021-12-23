@@ -70,14 +70,13 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
   if (!user) {
     return next(new ErrorHandler("User not found", 404));
   }
-
   //get reset token
   const resetToken = user.getResetPasswordToken();
   await user.save({ validateBeforeSave: false });
   const resetPasswordUrl = `${req.protocol}://${req.get(
     "host"
   )}/user/password/reset/${resetToken}`;
-  const message = `Your password reset token is :- /n/n ${resetPasswordUrl} If you have not requested this email then please ignore it!`;
+  const message = `Your password reset token is :- /n/n ${resetPasswordUrl}. If you have not requested this email then please ignore it!`;
   try {
     await sendEmail({
       email: user.email,
