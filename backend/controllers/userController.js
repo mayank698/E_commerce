@@ -73,10 +73,8 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
   //get reset token
   const resetToken = user.getResetPasswordToken();
   await user.save({ validateBeforeSave: false });
-  const resetPasswordUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/user/password/reset/${resetToken}`;
-  const message = `Your password reset token is :- /n/n ${resetPasswordUrl}. If you have not requested this email then please ignore it!`;
+  const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
+  const message = `Your password reset token is :- ${resetPasswordUrl}. If you have not requested this email then please ignore it!`;
   try {
     await sendEmail({
       email: user.email,
@@ -97,7 +95,7 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 
 //Reset Password
 exports.resetPassword = catchAsyncError(async (req, res, next) => {
-  this.resetPasswordToken = crypto
+  const resetPasswordToken = crypto
     .createHash("sha256")
     .update(req.params.token)
     .digest("hex");
@@ -107,11 +105,11 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   });
   if (!user) {
     return next(
-      ErrorHandler("Reset password token is invalid or exprired", 400)
+     new ErrorHandler("Reset password token is invalid or exprired", 400)
     );
   }
   if (req.body.password !== req.body.confirmPassword) {
-    return next(ErrorHandler("Both password must be same", 400));
+    return next(new ErrorHandler("Both password must be same", 400));
   }
   user.password = req.body.password;
   user.resetPasswordToken = undefined;

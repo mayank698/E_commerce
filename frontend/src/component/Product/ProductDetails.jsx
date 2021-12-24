@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
 import { useSelector, useDispatch } from "react-redux";
 import { clearErrors, getProductDetails } from "../../actions/productAction";
@@ -9,6 +9,7 @@ import ReviewCard from "./ReviewCard";
 import Loader from "../layout/Loader/Loader";
 import { useAlert } from "react-alert";
 import MetaData from "../layout/MetaData";
+import { addItemsToCart } from "../../actions/cartAction";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,10 @@ const ProductDetails = () => {
     (state) => state.productDetails
   );
   const { id } = useParams();
-
+  const addToCartHandler = () => {
+    dispatch(addItemsToCart(id, quantity));
+    alert.success("Item added to cart");
+  };
   useEffect(() => {
     if (error) {
       alert.error(error);
@@ -33,6 +37,20 @@ const ProductDetails = () => {
     value: product.ratings,
     isHalf: true,
     size: window.innerWidth < 600 ? 20 : 25,
+  };
+  const [quantity, setQuantity] = useState(1);
+
+  const increaseQuantity = () => {
+    if (product.stock <= quantity) return;
+    const qty = quantity + 1;
+    setQuantity(qty);
+  };
+
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      const qty = quantity - 1;
+      setQuantity(qty);
+    }
   };
 
   return (
@@ -70,11 +88,11 @@ const ProductDetails = () => {
                 <h1>{`₹${product.price}`}</h1>
                 <div className="detailsBlock-3-1">
                   <div className="detailsBlock-3-1-1">
-                    <button>-</button>
-                    <input value="1" type="number" />
-                    <button>+</button>
+                    <button onClick={decreaseQuantity}>-</button>
+                    <input readOnly value={quantity} type="number" />
+                    <button onClick={increaseQuantity}>+</button>
                   </div>
-                  <button>Add to cart</button>
+                  <button onClick={addToCartHandler}>Add to cart</button>
                 </div>
                 <p>
                   Status:
