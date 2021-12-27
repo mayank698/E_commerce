@@ -5,9 +5,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { addItemsToCart, removeItemsFromCart } from "../../actions/cartAction";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import { Typography } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import MetaData from "../layout/MetaData";
 
 const Cart = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
 
@@ -31,8 +33,13 @@ const Cart = () => {
     dispatch(removeItemsFromCart(id));
   };
 
+  const checkoutHandler = () => {
+    navigate("/shipping");
+  };
+
   return (
     <Fragment>
+    <MetaData title="Cart"/>
       {cartItems.length === 0 ? (
         <div className="emptyCart">
           <RemoveShoppingCartIcon />
@@ -88,7 +95,7 @@ const Cart = () => {
               </div>
               <div></div>
               <div className="checkOutBtn">
-                <button>Check out</button>
+                <button onClick={checkoutHandler}>Check out</button>
               </div>
             </div>
           </div>
