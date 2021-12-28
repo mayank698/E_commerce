@@ -14,9 +14,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
+
 app.use("/api/v1", require("./routes/productRoutes"));
 app.use("/api/v1", require("./routes/userRoutes"));
 app.use("/api/v1", require("./routes/orderRoutes"));
+app.use("/api/v1", require("./routes/paymentRoutes"));
 
 //Handling uncaught exception
 process.on("uncaughtException", (err) => {

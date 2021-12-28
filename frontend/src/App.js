@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./component/layout/Header/Header";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Footer from "./component/layout/Footer/Footer";
@@ -22,14 +22,32 @@ import ResetPassword from "./component/User/ResetPassword";
 import Cart from "./component/Cart/Cart";
 import Shipping from "./component/Cart/Shipping";
 import ConfirmOrder from "./component/Cart/ConfirmOrder";
+import axios from "axios";
+import Payment from "./component/Cart/Payment.jsx";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 function App() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
+
+  const [stripeApiKey, setStripeApiKey] = useState("");
+
+  async function getStripeApiKey() {
+    const { data } = await axios.get("/api/v1/stripeapikey");
+
+    setStripeApiKey(data.stripeApiKey);
+  }
+
   useEffect(() => {
     WebFont.load({
-      google: { families: ["Roboto", "Droid Sans", "Chilanka"] },
+      google: {
+        families: ["Roboto", "Droid Sans", "Chilanka"],
+      },
     });
+
     store.dispatch(loadUser());
+
+    getStripeApiKey();
   }, []);
 
   return (
@@ -81,6 +99,16 @@ function App() {
             <ProtectedRoute>
               <ConfirmOrder />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/process/payment"
+          element={
+            <Elements stripe={loadStripe(stripeApiKey)}>
+              <ProtectedRoute>
+                <Payment />
+              </ProtectedRoute>
+            </Elements> 
           }
         />
         <Route path="/password/forgot" element={<ForgotPassword />} />
