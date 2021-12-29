@@ -24,6 +24,7 @@ const Products = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
   const { keyword } = useParams();
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [price, setPrice] = useState([0, 25000]);
   const [category, setCategory] = useState("");
@@ -46,6 +47,7 @@ const Products = () => {
   };
 
   let count = filteredProductsCount;
+  
   useEffect(() => {
     if (error) {
       alert.error(error);

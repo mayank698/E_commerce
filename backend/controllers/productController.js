@@ -1,11 +1,12 @@
-//get all product -- Admin
-exports.getAllProducts = (req, res) =>
-  res.status(200).json({ message: "Root is working fine" });
-
 const Product = require("../model/productModel");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const ApiFeatures = require("../utils/apiFeatures");
+
+//get all product -- Admin
+exports.getAllProducts = (req, res) =>
+  res.status(200).json({ message: "Root is working fine" });
+
 
 //create product-- Admin
 exports.createProduct = catchAsyncError(async (req, res, next) => {

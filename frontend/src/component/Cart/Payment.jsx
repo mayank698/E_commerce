@@ -1,5 +1,5 @@
 import { Typography } from "@material-ui/core";
-import React, { Fragment, useRef } from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 import MetaData from "../layout/MetaData";
 import CheckoutSteps from "./CheckoutSteps";
 import "./payment.css";
@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { clearErrors, createOrder } from "../../actions/orderAction";
 
 const Payment = () => {
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
@@ -29,6 +30,7 @@ const Payment = () => {
   const navigate = useNavigate();
   const { shippingInfo, cartItems } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.user);
+  const { error } = useSelector((state) => state.newOrder);
 
   const paymentData = {
     amount: Math.round(orderInfo.totalPrice * 100),
@@ -38,9 +40,9 @@ const Payment = () => {
     shippingInfo,
     orderItems: cartItems,
     itemsPrice: orderInfo.subtotal,
-    taxPrice: orderInfo.tax,
-    shippingPrice: orderInfo.shippingCharges,
     totalPrice: orderInfo.totalPrice,
+    shippingPrice: orderInfo.shippingPrice,
+    taxPrice: orderInfo.tax,
   };
 
   const submitHandler = async (e) => {
@@ -91,6 +93,7 @@ const Payment = () => {
             id: result.paymentIntent.id,
             status: result.paymentIntent.status,
           };
+          dispatch(createOrder(order));
 
           navigate("/success");
         } else {
@@ -102,6 +105,13 @@ const Payment = () => {
       alert.error(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearErrors());
+    }
+  }, [dispatch, error, alert]);
 
   return (
     <Fragment>
