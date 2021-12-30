@@ -48,8 +48,8 @@ userSchema.methods.getJWTToken = function () {
 };
 
 //compare password
-userSchema.methods.comparePassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
 };
 
 //reset password

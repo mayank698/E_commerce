@@ -2,6 +2,7 @@ const Order = require("../model/orderModel");
 const Product = require("../model/productModel");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
+const mongoose = require("mongoose");
 
 //create new order
 exports.newOrder = catchAsyncError(async (req, res, next) => {
