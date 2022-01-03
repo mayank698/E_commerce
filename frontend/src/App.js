@@ -23,12 +23,15 @@ import Cart from "./component/Cart/Cart";
 import Shipping from "./component/Cart/Shipping";
 import ConfirmOrder from "./component/Cart/ConfirmOrder";
 import axios from "axios";
-import Payment from "./component/Cart/Payment.jsx";
+import Payment from "./component/Cart/Payment";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import OrderSuccess from "./component/Cart/OrderSuccess";
 import MyOrders from "./component/Orders/MyOrders";
-import OrderDetail from './component/Orders/OrderDetail.jsx'
+import OrderDetail from "./component/Orders/OrderDetail";
+import Dashboard from "./component/admin/Dashboard";
+import ProductList from "./component/admin/ProductList";
+import NewProduct from "./component/admin/NewProduct";
 
 function App() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -58,14 +61,14 @@ function App() {
       <Header />
       {isAuthenticated && <UserOptions user={user} />}
       <Routes>
-        <Route exact path="/" element={<Home />} />
-        <Route exact path="/product/:id" element={<ProductDetails />} />
-        <Route exact path="/products" element={<Products />} />
-        <Route path="/products/:keyword" element={<Products />} />
-        <Route exact path="/search" element={<Search />} />
-        <Route exact path="/login" element={<Authenticate />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="products" element={<Products />} />
+        <Route path="products/:keyword" element={<Products />} />
+        <Route path="search" element={<Search />} />
+        <Route path="login" element={<Authenticate />} />
         <Route
-          path="/account"
+          path="account"
           element={
             <ProtectedRoute>
               <Profile />
@@ -73,7 +76,7 @@ function App() {
           }
         />
         <Route
-          path="/me/update"
+          path="me/update"
           element={
             <ProtectedRoute>
               <UpdateProfile />
@@ -81,7 +84,7 @@ function App() {
           }
         />
         <Route
-          path="/password/update"
+          path="password/update"
           element={
             <ProtectedRoute>
               <UpdatePassword />
@@ -89,7 +92,7 @@ function App() {
           }
         />
         <Route
-          path="/shipping"
+          path="shipping"
           element={
             <ProtectedRoute>
               <Shipping />
@@ -97,7 +100,7 @@ function App() {
           }
         />
         <Route
-          path="/order/confirm"
+          path="order/confirm"
           element={
             <ProtectedRoute>
               <ConfirmOrder />
@@ -105,7 +108,7 @@ function App() {
           }
         />
         <Route
-          path="/process/payment"
+          path="process/payment"
           element={
             <Elements stripe={loadStripe(stripeApiKey)}>
               <ProtectedRoute>
@@ -115,32 +118,56 @@ function App() {
           }
         />
         <Route
-          path="/success"
+          path="success"
           element={
             <ProtectedRoute>
               <OrderSuccess />
             </ProtectedRoute>
           }
-        />  
+        />
         <Route
-          path="/orders"
+          path="orders"
           element={
             <ProtectedRoute>
               <MyOrders />
             </ProtectedRoute>
           }
-        />  
+        />
         <Route
-          path="/order/:id"
+          path="order/:id"
           element={
             <ProtectedRoute>
               <OrderDetail />
             </ProtectedRoute>
           }
         />
-        <Route path="/password/forgot" element={<ForgotPassword />} />
-        <Route path="/password/reset/:token" element={<ResetPassword />} />
-        <Route path="/Cart" element={<Cart />} />
+        <Route
+          path="admin"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/products"
+          element={
+            <ProtectedRoute>
+              <ProductList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/product"
+          element={
+            <ProtectedRoute>
+              <NewProduct />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="password/forgot" element={<ForgotPassword />} />
+        <Route path="password/reset/:token" element={<ResetPassword />} />
+        <Route path="Cart" element={<Cart />} />
       </Routes>
       <Footer />
     </Router>

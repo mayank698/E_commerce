@@ -2,22 +2,39 @@ const Product = require("../model/productModel");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const ApiFeatures = require("../utils/apiFeatures");
+const cloudinary = require("cloudinary");
 
 //get all product -- Admin
 exports.getAllProducts = (req, res) =>
   res.status(200).json({ message: "Root is working fine" });
 
-
 //create product-- Admin
 exports.createProduct = catchAsyncError(async (req, res, next) => {
+  let images = [];
+  if (typeof req.body.images === "string") {
+    images.push(req.body.images);
+  } else {
+    images = req.body.images;
+  }
+  const imagesLink = [];
+  for (let i = 0; i < images.length; i++) {
+    const result = await cloudinary.v2.uploader.upload(images[i], {
+      folder: "products",
+    });
+    imagesLink.push({
+      public_id: result.public_id,
+      url: result.secure_url,
+    });
+  }
+  req.body.images = imagesLink;
   req.body.user = req.user.id;
+
   const product = await Product.create(req.body);
   res.status(201).json({ success: true, product });
 });
 
 //get all product
 exports.getAllProducts = catchAsyncError(async (req, res, next) => {
-  
   const resultPerPage = 8;
   const productCount = await Product.countDocuments();
 
@@ -38,6 +55,16 @@ exports.getAllProducts = catchAsyncError(async (req, res, next) => {
     productCount,
     resultPerPage,
     filteredProductsCount,
+  });
+});
+
+//Get all product -- Admin
+exports.getAdminProducts = catchAsyncError(async (req, res, next) => {
+  const products = await Product.find();
+
+  res.status(200).json({
+    success: true,
+    products,
   });
 });
 
