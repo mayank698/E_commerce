@@ -32,6 +32,8 @@ import OrderDetail from "./component/Orders/OrderDetail";
 import Dashboard from "./component/admin/Dashboard";
 import ProductList from "./component/admin/ProductList";
 import NewProduct from "./component/admin/NewProduct";
+import UpdateProduct from "./component/admin/UpdateProduct";
+import OrderList from "./component/admin/OrderList";
 
 function App() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -63,12 +65,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="products" element={<Products />} />
-        <Route path="products/:keyword" element={<Products />} />
-        <Route path="search" element={<Search />} />
-        <Route path="login" element={<Authenticate />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/products/:keyword" element={<Products />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/login" element={<Authenticate />} />
         <Route
-          path="account"
+          path="/account"
           element={
             <ProtectedRoute>
               <Profile />
@@ -76,7 +78,7 @@ function App() {
           }
         />
         <Route
-          path="me/update"
+          path="/me/update"
           element={
             <ProtectedRoute>
               <UpdateProfile />
@@ -84,7 +86,7 @@ function App() {
           }
         />
         <Route
-          path="password/update"
+          path="/password/update"
           element={
             <ProtectedRoute>
               <UpdatePassword />
@@ -92,7 +94,7 @@ function App() {
           }
         />
         <Route
-          path="shipping"
+          path="/shipping"
           element={
             <ProtectedRoute>
               <Shipping />
@@ -100,7 +102,7 @@ function App() {
           }
         />
         <Route
-          path="order/confirm"
+          path="/order/confirm"
           element={
             <ProtectedRoute>
               <ConfirmOrder />
@@ -108,7 +110,7 @@ function App() {
           }
         />
         <Route
-          path="process/payment"
+          path="/process/payment"
           element={
             <Elements stripe={loadStripe(stripeApiKey)}>
               <ProtectedRoute>
@@ -118,7 +120,7 @@ function App() {
           }
         />
         <Route
-          path="success"
+          path="/success"
           element={
             <ProtectedRoute>
               <OrderSuccess />
@@ -126,7 +128,7 @@ function App() {
           }
         />
         <Route
-          path="orders"
+          path="/orders"
           element={
             <ProtectedRoute>
               <MyOrders />
@@ -134,7 +136,7 @@ function App() {
           }
         />
         <Route
-          path="order/:id"
+          path="/order/:id"
           element={
             <ProtectedRoute>
               <OrderDetail />
@@ -142,7 +144,7 @@ function App() {
           }
         />
         <Route
-          path="admin"
+          path="/admin/dashboard"
           element={
             <ProtectedRoute>
               <Dashboard />
@@ -150,7 +152,7 @@ function App() {
           }
         />
         <Route
-          path="admin/products"
+          path="/admin/products"
           element={
             <ProtectedRoute>
               <ProductList />
@@ -158,10 +160,26 @@ function App() {
           }
         />
         <Route
-          path="admin/product"
+          path="/admin/product"
           element={
             <ProtectedRoute>
               <NewProduct />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/product/:id"
+          element={
+            <ProtectedRoute>
+              <UpdateProduct />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/orders"
+          element={
+            <ProtectedRoute>
+              <OrderList />
             </ProtectedRoute>
           }
         />

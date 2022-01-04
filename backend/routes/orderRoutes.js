@@ -17,7 +17,7 @@ router
 
 router.route("/orders/me").get(isAuthenticatedUser, myOrders);
 router
-  .route("/admin/order")
+  .route("/admin/orders")
   .get(isAuthenticatedUser, authorisedRoles("admin"), getAllOrders);
 router
   .route("/admin/order/:id")

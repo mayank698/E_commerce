@@ -19,7 +19,7 @@ router
   .route("/admin/product/new")
   .post(isAuthenticatedUser, authorisedRoles("admin"), createProduct);
 router
-  .route("/admin/products/:id")
+  .route("/admin/product/:id")
   .put(isAuthenticatedUser, authorisedRoles("admin"), updateProduct)
   .delete(isAuthenticatedUser, authorisedRoles("admin"), deleteProduct);
 router.route("/review").put(isAuthenticatedUser, reviewProduct);

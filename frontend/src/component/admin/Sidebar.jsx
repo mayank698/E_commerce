@@ -18,7 +18,7 @@ const Sidebar = () => {
       <Link to="/">
         <img src={logo} alt="Ecommerce" />
       </Link>
-      <Link to="dashboard">
+      <Link to="/admin/dashboard">
         <p>
           <DashboardIcon /> Dashboard
         </p>
@@ -29,27 +29,27 @@ const Sidebar = () => {
           defaultExpandIcon={<ImportExportIcon />}
         >
           <TreeItem nodeId="1" label="Products">
-            <Link to="products">
+            <Link to="/admin/products">
               <TreeItem nodeId="2" label="All" icon={<PostAddIcon />} />
             </Link>
-            <Link to="product">
+            <Link to="/admin/product">
               <TreeItem nodeId="3" label="Create" icon={<AddIcon />} />
             </Link>
           </TreeItem>
         </TreeView>
       </Link>
-      <Link to="orders">
+      <Link to="/admin/orders">
         <p>
           <ListAltIcon />
           Orders
         </p>
       </Link>
-      <Link to="users">
+      <Link to="/admin/users">
         <p>
           <PeopleIcon /> Users
         </p>
       </Link>
-      <Link to="reviews">
+      <Link to="/admin/reviews">
         <p>
           <RateReviewIcon />
           Reviews

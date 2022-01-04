@@ -42,16 +42,16 @@ const UserOptions = ({ user }) => {
     });
   }
   function dashboard() {
-    navigate("admin");
+    navigate("/admin/dashboard");
   }
   function orders() {
-    navigate("orders");
+    navigate("/orders");
   }
   function account() {
-    navigate("account");
+    navigate("/account");
   }
   function cart() {
-    navigate("cart");
+    navigate("/cart");
   }
   function logoutUser() {
     dispatch(logout());

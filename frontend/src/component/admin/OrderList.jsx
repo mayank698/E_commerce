@@ -10,20 +10,18 @@ import MetaData from "../../component/layout/MetaData";
 import Sidebar from "./Sidebar";
 import { DataGrid } from "@mui/x-data-grid";
 import {
+  getAllOrders,
   clearErrors,
-  getAdminProduct,
-  deleteProduct,
-} from "../../actions/productAction";
-import { DELETE_PRODUCT_RESET } from "../../constants/productConstants";
+  deleteOrder,
+} from "../../actions/orderAction";
+import { DELETE_ORDER_RESET } from "../../constants/orderConstant";
 
-const ProductList = () => {
+const OrderList = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
   const navigate = useNavigate();
-  const { error, products } = useSelector((state) => state.products);
-  const { error: deleteError, isDeleted } = useSelector(
-    (state) => state.product
-  );
+  const { error, orders } = useSelector((state) => state.allOrders);
+  const { error: deleteError, isDeleted } = useSelector((state) => state.order);
 
   useEffect(() => {
     if (error) {
@@ -35,21 +33,44 @@ const ProductList = () => {
       dispatch(clearErrors());
     }
     if (isDeleted) {
-      alert.success("Product Deleted Successfully");
-      navigate("/admin/dashboard");
-      dispatch({ type: DELETE_PRODUCT_RESET });
+      alert.success("Order Deleted Successfully");
+      navigate("/admin/orders");
+      dispatch({ type: DELETE_ORDER_RESET });
     }
-    dispatch(getAdminProduct());
+    dispatch(getAllOrders());
   }, [dispatch, alert, error, deleteError, isDeleted, navigate]);
 
-  const deleteProductHandler = (id) => {
-    dispatch(deleteProduct(id));
+  const deleteOrderHandler = (id) => {
+    dispatch(deleteOrder(id));
   };
 
   const columns = [
-    { field: "id", headerName: "Product Id", minWidth: 200, flex: 0.5 },
-    { field: "name", headerName: "Name", minWidth: 350, flex: 1 },
-    { field: "stock", headerName: "Stock", minWidth: 150, flex: 0.3 },
+    { field: "id", headerName: "Order Id", minWidth: 300, flex: 1 },
+    {
+      field: "status",
+      headerName: "Status",
+      minWidth: 150,
+      flex: 0.5,
+      cellClassName: (params) => {
+        return params.getValue(params.id, "status") === "Delivered"
+          ? "greenColor"
+          : "redColor";
+      },
+    },
+    {
+      field: "itemsQty",
+      headerName: "Items Qty",
+      type: "number",
+      minWidth: 150,
+      flex: 0.3,
+    },
+    {
+      field: "amount",
+      headerName: "Amount",
+      type: "number",
+      minWidth: 270,
+      flex: 0.5,
+    },
     {
       field: "actions",
       headerName: "Actions",
@@ -60,12 +81,12 @@ const ProductList = () => {
       renderCell: (params) => {
         return (
           <Fragment>
-            <Link to={`/admin/product/${params.getValue(params.id, "id")}`}>
+            <Link to={`/admin/order/${params.getValue(params.id, "id")}`}>
               <EditIcon />
             </Link>
             <Button
               onClick={() =>
-                deleteProductHandler(params.getValue(params.id, "id"))
+                deleteOrderHandler(params.getValue(params.id, "id"))
               }
             >
               <DeleteIcon />
@@ -74,33 +95,26 @@ const ProductList = () => {
         );
       },
     },
-    {
-      field: "price",
-      headerName: "Price",
-      minWidth: 270,
-      type: "number",
-      flex: 0.5,
-    },
   ];
 
   const rows = [];
-  products &&
-    products.forEach((item) => {
+  orders &&
+    orders.forEach((item) => {
       rows.push({
         id: item._id,
-        stock: item.stock,
-        price: item.price,
-        name: item.name,
+        itemsQty: item.orderItems.length,
+        amount: item.totalPrice,
+        status: item.orderStatus,
       });
     });
 
   return (
     <Fragment>
-      <MetaData title={"All products - Admin"} />
+      <MetaData title={"All Orders - Admin"} />
       <div className="dashboard">
         <Sidebar />
         <div className="productListContainer">
-          <h1 id="productListHeading">All product</h1>
+          <h1 id="productListHeading">All Orders</h1>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -115,4 +129,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default OrderList;
