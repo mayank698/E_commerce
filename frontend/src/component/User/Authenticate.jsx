@@ -173,7 +173,7 @@ const Authenticate = () => {
                     accept="image/*"
                     onChange={registerDataChange}
                   />
-                </div>
+                </div>    
                 <input type="submit" value="Register" className="signUpBtn" />
               </form>
             </div>

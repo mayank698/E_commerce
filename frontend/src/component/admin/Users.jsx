@@ -9,21 +9,19 @@ import { Button } from "@material-ui/core";
 import MetaData from "../../component/layout/MetaData";
 import Sidebar from "./Sidebar";
 import { DataGrid } from "@mui/x-data-grid";
-import {
-  clearErrors,
-  getAdminProduct,
-  deleteProduct,
-} from "../../actions/productAction";
-import { DELETE_PRODUCT_RESET } from "../../constants/productConstants";
+import { clearErrors, deleteUser, getAllUsers } from "../../actions/userAction";
+import { DELETE_USER_RESET } from "../../constants/userConstants";
 
-const ProductList = () => {
+const Users = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
   const navigate = useNavigate();
-  const { error, products } = useSelector((state) => state.products);
-  const { error: deleteError, isDeleted } = useSelector(
-    (state) => state.product
-  );
+  const { error, users } = useSelector((state) => state.allUsers);
+  const {
+    error: deleteError,
+    isDeleted,
+    message,
+  } = useSelector((state) => state.profile);
 
   useEffect(() => {
     if (error) {
@@ -35,21 +33,33 @@ const ProductList = () => {
       dispatch(clearErrors());
     }
     if (isDeleted) {
-      alert.success("Product Deleted Successfully");
-      navigate("/admin/dashboard");
-      dispatch({ type: DELETE_PRODUCT_RESET });
+      alert.success(message);
+      navigate("/admin/users");
+      dispatch({ type: DELETE_USER_RESET });
     }
-    dispatch(getAdminProduct());
-  }, [dispatch, alert, error, deleteError, isDeleted, navigate]);
+    dispatch(getAllUsers());
+  }, [dispatch, alert, error, deleteError, isDeleted, navigate, message]);
 
-  const deleteProductHandler = (id) => {
-    dispatch(deleteProduct(id));
+  const deleteUserHandler = (id) => {
+    dispatch(deleteUser(id));
   };
 
   const columns = [
-    { field: "id", headerName: "Product Id", minWidth: 200, flex: 0.5 },
-    { field: "name", headerName: "Name", minWidth: 350, flex: 1 },
-    { field: "stock", headerName: "Stock", minWidth: 150, flex: 0.3 },
+    { field: "id", headerName: "User Id", minWidth: 180, flex: 0.8 },
+    { field: "email", headerName: "Email", minWidth: 200, flex: 1 },
+    { field: "name", headerName: "Name", minWidth: 150, flex: 0.5 },
+
+    {
+      field: "role",
+      headerName: "Role",
+      minWidth: 150,
+      flex: 0.3,
+      cellClassName: (params) => {
+        return params.getValue(params.id, "role") === "admin"
+          ? "greenColor"
+          : "redColor";
+      },
+    },
     {
       field: "actions",
       headerName: "Actions",
@@ -60,12 +70,12 @@ const ProductList = () => {
       renderCell: (params) => {
         return (
           <Fragment>
-            <Link to={`/admin/product/${params.getValue(params.id, "id")}`}>
+            <Link to={`/admin/user/${params.getValue(params.id, "id")}`}>
               <EditIcon />
             </Link>
             <Button
               onClick={() =>
-                deleteProductHandler(params.getValue(params.id, "id"))
+                deleteUserHandler(params.getValue(params.id, "id"))
               }
             >
               <DeleteIcon />
@@ -74,33 +84,26 @@ const ProductList = () => {
         );
       },
     },
-    {
-      field: "price",
-      headerName: "Price",
-      minWidth: 270,
-      type: "number",
-      flex: 0.5,
-    },
   ];
 
   const rows = [];
-  products &&
-    products.forEach((item) => {
+  users &&
+    users.forEach((item) => {
       rows.push({
         id: item._id,
-        stock: item.stock,
-        price: item.price,
+        role: item.role,
+        email: item.email,
         name: item.name,
       });
     });
 
   return (
     <Fragment>
-      <MetaData title={"All products - Admin"} />
+      <MetaData title={"All users - Admin"} />
       <div className="dashboard">
         <Sidebar />
         <div className="productListContainer">
-          <h1 id="productListHeading">ALL PRODUCT</h1>
+          <h1 id="productListHeading">All users</h1>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -115,4 +118,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default Users;

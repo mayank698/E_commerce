@@ -105,7 +105,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   });
   if (!user) {
     return next(
-     new ErrorHandler("Reset password token is invalid or exprired", 400)
+      new ErrorHandler("Reset password token is invalid or exprired", 400)
     );
   }
   if (req.body.password !== req.body.confirmPassword) {
@@ -181,6 +181,8 @@ exports.deleteUser = catchAsyncError(async (req, res, next) => {
   if (!user) {
     return next(new ErrorHandler(`User doesn't exists with ${req.params.id}`));
   }
+  const imageId = user.avatar.public_id;
+  await cloudinary.v2.uploader.destroy(imageId);
   await user.remove();
   res.status(200).json({
     success: true,

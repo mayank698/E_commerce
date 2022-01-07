@@ -157,7 +157,7 @@ exports.reviewProduct = catchAsyncError(async (req, res, next) => {
     product.numOfReviews = product.reviews.length;
   }
   let avg = 0;
-  product.ratings = product.reviews.forEach((rev) => {
+  product.reviews.forEach((rev) => {
     avg += rev.rating;
   });
   product.ratings = avg / product.reviews.length;
@@ -175,7 +175,7 @@ exports.getProductReview = catchAsyncError(async (req, res, next) => {
   }
   res.status(200).json({
     success: true,
-    review: product.reviews,
+    reviews: product.reviews,
   });
 });
 
@@ -192,7 +192,13 @@ exports.deleteReview = catchAsyncError(async (req, res, next) => {
   reviews.forEach((rev) => {
     avg += rev.rating;
   });
-  const ratings = avg / reviews.length;
+  let ratings = 0;
+
+  if (reviews.length === 0) {
+    ratings = 0;
+  } else {
+    ratings = avg / reviews.length;
+  }
   const numOfReviews = reviews.length;
   await Product.findByIdAndUpdate(
     req.query.productId,

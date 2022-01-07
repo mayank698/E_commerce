@@ -1,14 +1,13 @@
 import React, { Fragment, useEffect, useState } from "react";
 import Carousel from "react-material-ui-carousel";
+import "./ProductDetails.css";
 import { useSelector, useDispatch } from "react-redux";
 import {
   clearErrors,
   getProductDetails,
   newReview,
 } from "../../actions/productAction";
-import { useParams } from "react-router-dom";
-import "./ProductDetails.css";
-import ReviewCard from "./ReviewCard";
+import ReviewCard from "./ReviewCard.js";
 import Loader from "../layout/Loader/Loader";
 import { useAlert } from "react-alert";
 import MetaData from "../layout/MetaData";
@@ -22,15 +21,11 @@ import {
 } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
 import { NEW_REVIEW_RESET } from "../../constants/productConstants";
+import { useParams } from "react-router-dom";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
-  const [quantity, setQuantity] = useState(1);
-  const [open, setOpen] = useState(false);
-  const [rating, setRatings] = useState(0);
-  const [comment, setComment] = useState("");
-  const { id } = useParams();
 
   const { product, loading, error } = useSelector(
     (state) => state.productDetails
@@ -39,43 +34,52 @@ const ProductDetails = () => {
   const { success, error: reviewError } = useSelector(
     (state) => state.newReview
   );
+  const { id } = useParams();
+
+  const options = {
+    size: "large",
+    value: product.ratings,
+    readOnly: true,
+    precision: 0.5,
+  };
+
+  const [quantity, setQuantity] = useState(1);
+  const [open, setOpen] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+
+  const increaseQuantity = () => {
+    if (product.stock <= quantity) return;
+
+    const qty = quantity + 1;
+    setQuantity(qty);
+  };
+
+  const decreaseQuantity = () => {
+    if (1 >= quantity) return;
+
+    const qty = quantity - 1;
+    setQuantity(qty);
+  };
 
   const addToCartHandler = () => {
     dispatch(addItemsToCart(id, quantity));
-    alert.success("Item added to cart");
+    alert.success("Item Added To Cart");
   };
 
   const submitReviewToggle = () => {
     open ? setOpen(false) : setOpen(true);
   };
 
-  const options = {
-    value: product.ratings,
-    size: "large",
-    readOnly: true,
-    precision: 0.5,
-  };
-
-  const increaseQuantity = () => {
-    if (product.stock <= quantity) return;
-    const qty = quantity + 1;
-    setQuantity(qty);
-  };
-
-  const decreaseQuantity = () => {
-    if (quantity > 1) {
-      const qty = quantity - 1;
-      setQuantity(qty);
-    }
-  };
-
   const reviewSubmitHandler = () => {
     const myForm = new FormData();
+
     myForm.set("rating", rating);
     myForm.set("comment", comment);
     myForm.set("productId", id);
 
     dispatch(newReview(myForm));
+
     setOpen(false);
   };
 
@@ -84,16 +88,18 @@ const ProductDetails = () => {
       alert.error(error);
       dispatch(clearErrors());
     }
+
     if (reviewError) {
       alert.error(reviewError);
       dispatch(clearErrors());
     }
+
     if (success) {
-      alert.success("Review submitted successfully");
+      alert.success("Review Submitted Successfully");
       dispatch({ type: NEW_REVIEW_RESET });
     }
     dispatch(getProductDetails(id));
-  }, [dispatch, id, alert, error, reviewError, success]);
+  }, [dispatch, id, error, alert, reviewError, success]);
 
   return (
     <Fragment>
@@ -138,7 +144,7 @@ const ProductDetails = () => {
                     <button onClick={increaseQuantity}>+</button>
                   </div>
                   <button
-                    disabled={product.Stock < 1 ? true : false}
+                    disabled={product.stock < 1 ? true : false}
                     onClick={addToCartHandler}
                   >
                     Add to Cart
@@ -147,8 +153,8 @@ const ProductDetails = () => {
 
                 <p>
                   Status:
-                  <b className={product.Stock < 1 ? "redColor" : "greenColor"}>
-                    {product.Stock < 1 ? "OutOfStock" : "InStock"}
+                  <b className={product.stock < 1 ? "redColor" : "greenColor"}>
+                    {product.stock < 1 ? "OutOfstock" : "Instock"}
                   </b>
                 </p>
               </div>
@@ -173,7 +179,7 @@ const ProductDetails = () => {
             <DialogTitle>Submit Review</DialogTitle>
             <DialogContent className="submitDialog">
               <Rating
-                onChange={(e) => setRatings(e.target.value)}
+                onChange={(e) => setRating(e.target.value)}
                 value={rating}
                 size="large"
               />
